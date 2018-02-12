@@ -6,10 +6,12 @@ Obj/
 UnityGenerated/
 Library/
 Assets/AssetStoreTools*
+UnityPackageManager/
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
 # ===================================== #
+.vs/
 ExportedObj/
 *.svd
 *.userprefs
