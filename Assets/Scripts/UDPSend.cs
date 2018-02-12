@@ -20,7 +20,12 @@ public class UDPSend : MonoBehaviour {
         port = 8051;
 
         remoteEndPoint = new IPEndPoint(IPAddress.Parse(IP), port);
+
+        // Create our client
         client = new UdpClient();
+
+        // Enable broadcasting messages
+        client.EnableBroadcast = true;
     }
 
     // Use this for initialization
@@ -31,7 +36,6 @@ public class UDPSend : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        sendString("testing");
 	}
 
     public void sendString(string msg)
