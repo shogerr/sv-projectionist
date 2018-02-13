@@ -5,16 +5,19 @@ using UnityEngine.UI;
 
 public class SendCommand : MonoBehaviour {
     public UDPSend udp;
-    public Slider slider;
-
+    public Slider[] slider;
 
     Command cmd;
 
 	// Use this for initialization
 	void Start () {
         cmd = new Command();
-        slider.onValueChanged.AddListener(delegate { UpdateValue(); });
-        //udp = UDPSend.GetComponent<UDPSend>();	
+        Debug.Log(slider.Length);
+        for (int i = 0; i < slider.Length; i++)
+        {
+            int j = i;
+            slider[i].onValueChanged.AddListener(delegate { UpdateValue(j); });
+        }
 	}
 	
 	// Update is called once per frame
@@ -22,15 +25,18 @@ public class SendCommand : MonoBehaviour {
         //GetComponent<UDPSend>().sendString("tester");
 	}
 
-    public void UpdateValue()
+    public void UpdateValue(int i)
     {
-        cmd.value = slider.value;
+        Debug.Log(i);
+        cmd.name = slider[i].name;
+        cmd.value = slider[i].value;
         udp.sendString(JsonUtility.ToJson(cmd));
     }
 
     [System.Serializable]
     public class Command
     {
+        public string name;
         public float value;
     }
 }
