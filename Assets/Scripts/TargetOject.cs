@@ -16,6 +16,7 @@ public class TargetOject : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         var target = t[1].gameObject.GetComponent<MeshFilter>().mesh;
+        // Get a center point in world coords
         var p = t[1].localToWorldMatrix.MultiplyPoint3x4(target.vertices[0]);
         transform.position =  p + new Vector3(10, 0, 0);
         //transform.LookAt(t[1].position);
