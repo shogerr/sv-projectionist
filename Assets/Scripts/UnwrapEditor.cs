@@ -12,9 +12,14 @@ public class UnwrapEditor : Editor
         DrawDefaultInspector();
 
         UnwrapObject u = (UnwrapObject)target;
-        if (GUILayout.Button("Calculate UVs"))
+        if (GUILayout.Button("Calculate All Children UVs"))
         {
-            u.GenerateUVs();
+            u.GenerateAllChildrenUVs();
+        }
+
+        if (GUILayout.Button("Calculate Object UVs"))
+        {
+            u.GenerateUV();
         }
     }
 }

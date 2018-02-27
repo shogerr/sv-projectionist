@@ -4,16 +4,24 @@ using UnityEngine;
 using UnityEditor;
 
 public class UnwrapObject : MonoBehaviour {
-    public GameObject target;
-    public void GenerateUVs()
+    public void GenerateAllChildrenUVs()
     {
-        var meshes = target.GetComponentsInChildren<MeshFilter>();
-        for (int j = 0; j < 100; j++)
+        var meshes = GetComponentsInChildren<MeshFilter>();
+        for (int j = 0; j < meshes.Length; j++)
         {
             Unwrapping.GenerateSecondaryUVSet(meshes[j].sharedMesh);
             meshes[j].sharedMesh.uv = meshes[j].sharedMesh.uv2;
         }
     }
+
+    public void GenerateUV()
+    {
+        var m = GetComponent<MeshFilter>().mesh;
+        var sm = GetComponent<MeshFilter>().sharedMesh;
+        Unwrapping.GenerateSecondaryUVSet(sm);
+        m.uv = sm.uv2;
+    }
+
     public void GenerateRawUV(Mesh mesh)
     {
         Vector3[] vertices = mesh.vertices;

@@ -22,7 +22,8 @@ Shader "ViewportTexture" {
 
 #include "UnityCG.cginc"
 
-		struct v2f {
+	struct v2f
+	{
 		float4 pos : POSITION;
 		float4 uvproj : TEXCOORD0;
 	};
@@ -42,10 +43,10 @@ Shader "ViewportTexture" {
 
 	float4 frag(v2f i) : COLOR{
 		i.uvproj /= i.uvproj.w;
-	i.uvproj = (i.uvproj + 1) * 0.5;
+		i.uvproj = (i.uvproj + 1) * 0.5;
 
-	half4 color = tex2D(_MainTex,i.uvproj.xy);
-	return color*_Color;
+		half4 color = tex2D(_MainTex,i.uvproj.xy);
+		return color*_Color;
 	}
 		ENDCG
 	}
