@@ -14,26 +14,21 @@ public class FlyCamera : MonoBehaviour
     space : Moves camera on X and Z axis only.  So camera doesn't gain any height*/
 
 
-    public float mainSpeed = 100.0f; //regular speed
-    public float shiftAdd = 250.0f; //multiplied by how long shift is held.  Basically running
+    public float mainSpeed = 5.0f; //regular speed
+    public float shiftAdd = 50.0f; //multiplied by how long shift is held.  Basically running
     public float maxShift = 1000.0f; //Maximum speed when holdin gshift
     public float camSens = 0.25f; //How sensitive it with mouse
     public bool rotateOnlyIfMousedown = true;
     public bool movementStaysFlat = true;
 
     private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
-    private float totalRun = 1.0f;
+    private float totalRun = 0.2f;
 
     void Awake()
     {
-        Debug.Log("FlyCamera Awake() - RESETTING CAMERA POSITION"); // nop?
-                                                                    // nop:
-                                                                    //transform.position.Set(0,8,-32);
-                                                                    //transform.rotation.Set(15,0,0,1);
-        transform.position = new Vector3(0, 8, -32);
-        transform.rotation = Quaternion.Euler(25, 0, 0);
+        //transform.position = new Vector3(0, 8, -32);
+        //transform.rotation = Quaternion.Euler(25, 0, 0);
     }
-
 
     void Update()
     {
@@ -71,7 +66,8 @@ public class FlyCamera : MonoBehaviour
             p = p * mainSpeed;
         }
 
-        p = p * Time.deltaTime;
+
+        p = p * Time.deltaTime *.01f;
         Vector3 newPosition = transform.position;
         if (Input.GetKey(KeyCode.Space)
             || (movementStaysFlat && !(rotateOnlyIfMousedown && Input.GetMouseButton(1))))
@@ -106,6 +102,14 @@ public class FlyCamera : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             p_Velocity += new Vector3(1, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.E))
+        {
+            p_Velocity += new Vector3(0, 1, 0);
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            p_Velocity += new Vector3(0, -1, 0);
         }
         return p_Velocity;
     }
