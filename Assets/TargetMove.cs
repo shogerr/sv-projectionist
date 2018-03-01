@@ -43,7 +43,7 @@ public class TargetMove : MonoBehaviour {
         else
         {
             r.material = r.sharedMaterial;
-        {
+        }
     }
 
     void CreateNewScreen(RaycastHit hit)
