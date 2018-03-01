@@ -15,9 +15,11 @@ public class FlyCamera : MonoBehaviour
 
 
     public float mainSpeed = 5.0f; //regular speed
-    public float shiftAdd = 50.0f; //multiplied by how long shift is held.  Basically running
+    public float shiftAdd = 500.0f; //multiplied by how long shift is held.  Basically running
     public float maxShift = 1000.0f; //Maximum speed when holdin gshift
-    public float camSens = 0.25f; //How sensitive it with mouse
+    public float camSens = 0.25f; // How sensitive it with mouse
+    public float dampening = .05f; // How much attenuation to final value
+
     public bool rotateOnlyIfMousedown = true;
     public bool movementStaysFlat = true;
 
@@ -67,7 +69,7 @@ public class FlyCamera : MonoBehaviour
         }
 
 
-        p = p * Time.deltaTime *.01f;
+        p = p * Time.deltaTime * dampening;
         Vector3 newPosition = transform.position;
         if (Input.GetKey(KeyCode.Space)
             || (movementStaysFlat && !(rotateOnlyIfMousedown && Input.GetMouseButton(1))))

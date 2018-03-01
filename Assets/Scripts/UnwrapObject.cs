@@ -4,6 +4,8 @@ using UnityEngine;
 using UnityEditor;
 
 public class UnwrapObject : MonoBehaviour {
+    public Material setMaterial;
+
     public void GenerateAllChildrenUVs()
     {
         var meshes = GetComponentsInChildren<MeshFilter>();
@@ -45,5 +47,15 @@ public class UnwrapObject : MonoBehaviour {
             i++;
         }
         mesh.uv = uvs;
+    }
+
+    public void SetsAllChildrenMaterial()
+    {
+        var c = GetComponentsInChildren<Renderer>(); 
+        for (int i = 0; i < c.Length; i++)
+        {
+            c[i].material = setMaterial;
+        }
+
     }
 } 

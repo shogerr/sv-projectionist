@@ -30,8 +30,10 @@
 			struct v2f
 			{
 				float4 pos : SV_POSITION;
-			}
-			//sampler2D _MainTex;
+                float4 uv : TEXCOORD0;
+            };
+
+			sampler2D _MainTex;
 			//float4 _MainTex_ST;
 			
 			void vert (inout appdata_full v)
@@ -54,10 +56,10 @@
 				v.texcoord.xy = float2(dot(worldSpace, uDirection), dot(worldSpace, vDirection));
 			}
 			
-			fixed4 frag (v2f i) : SV_Target
+			fixed4 frag (in appdata_full v) : SV_Target
 			{
 				// sample the texture
-				fixed4 col = tex2D(_MainTex, i.uv);
+				fixed4 col = tex2D(_MainTex, v.texcoord.xy);
 				// apply fog
 				//UNITY_APPLY_FOG(i.fogCoord, col);
 				return col;
