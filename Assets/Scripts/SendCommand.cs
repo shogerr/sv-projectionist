@@ -17,7 +17,6 @@ public class SendCommand : MonoBehaviour {
         currentView = 0;
 
         cmd = new Command();
-        Debug.Log(slider.Length);
         // Add slider listeners
         for (int i = 0; i < slider.Length; i++)
         {

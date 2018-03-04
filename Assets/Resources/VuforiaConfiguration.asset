@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Name: VuforiaConfiguration
   m_EditorClassIdentifier: 
   vuforia:
-    vuforiaLicenseKey: 
-    ufoLicenseKey: QVd3L3N5UC8vLy8vQUFBQUtKd1dJejRDaVV2R3VzajhhNUdvSnVoWW9CQ09Fdi9iZ3Y3Qzl3a3VrUmZodTlwbnIvNm90NVlwTDBpcXYvVUE4UVh0ckxKMzFYMzdhNGh1dlp1eEJwak9XS3YzTWdaalFBSFVBTHZ6OHNBMHJsOEdScitNWUxZeTdoNzk0NmpxeUE5ajgrb3IxRksyWndZQ0VPYTBtekd5enFubDNHNUk4cnBOakF1QVFVakVvdUVZTGR3S2ZNRFF6YjVYajZHSFBMM3M3dm9EUTR6TTJNOXA1U0Nka1J3OWNiVVp6YTFvNnRtazl2SGtwQzB2cmIxUzBGa0JUZkp0akp2MWlkWS9aSE1jNVNOdm5ISk1BbGpYRTFtZU41TUpRRmM0d0IvN25FWWR4bFJxZGlkS2NkNlNLUkFhZjg1cmt3THhWRitpc1BFWUNSMmk3RVJrVi9mOE1uc2tPdDdIaGNSSW5uOTR5dkUzbFlQcXJnc20=
+    vuforiaLicenseKey: AS6Qq4//////AAAAmTDeLhn0kEn1lwmxugKMBognW+5xzrGmVQ3daxp5TenynDR0E+SoaS7GlzHmNKIo+JZ5VnIIrXogn/x3npG9ZVsAmrYmmWewja13rUGJeG6Eul3p6tbcs+ME4fh+Bg+/oM/vK/WtKMRwuzIsvOW0rv+aFKPEgTR+AX8CzZAlZiYAwt9zj7ACUQYDx5/e+Mvn/F4J4uV21YqzQIByQM3xLlujbdw5zvmLNVa27Uu+WDYkV1aUSpkIyEWFOrEyuUlMZPokJHIbNON4+yJSnySv8/CpZBOjKh7kZ1yueq3rniPLThU7ahJQTNrFSan4IJxKwSq6ae7oyjWDigH9LMA9490ahggKzVp//JpZeLv1yA3u
+    ufoLicenseKey: QVFwT0dsMy8vLy8vQUFBQUtHZVdWdGNZVmtFRXNwTzFqZjBsZE1RV2xJZEZaRVk4ZDdzdEhrU21yVEZXVFFWeURpTmZ0blp3bkJrR295SVdmbHRxTEdycmMzWENmU2wxTEFmY0dvTHkwQzBueEcxb05jemp1d3MvcUtKR25vakhxY0g2WUxnYmpSTHA3SkRuNysxcEJsY0FDcWFyK0dBMndJc1pBMWR1UzIycnU1YlcrKzhsZEJacjc3aWNsdXlUVHg5dlVEaWJvendZb0Y3ZW1Pc2h6d0FhUFhKdURNajNYWis0NTZnMjVzVFZBbXBsUFlKcjNCcFMvTCtXTkF1bkEyVkh1MFBXcVpHUE5PdlByK210T3hXdHRDcTF6ODF0SFQyblNKRGlXMWc1Q2t3c2d3d3VLY1dZc09id3JlZVk1aEgwOWRRdUtFZ09keGc0U1JGaTdkTjlqa3pTVEVVWlRPSFhld1JIMXpGUEtLcEx5Y1h5SldhVDRxSmo=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
     maxSimultaneousImageTargets: 1
@@ -46,9 +46,15 @@ MonoBehaviour:
     dataSetsToLoad:
     - VuforiaMars_Images
     - VuforiaMars_VuMark
+    - SensorViewTest
+    - VuforiaMars_Object_OT
+    - VuforiaMars_ModelTarget
     dataSetsToActivate:
     - VuforiaMars_Images
     - VuforiaMars_VuMark
+    - SensorViewTest
+    - VuforiaMars_Object_OT
+    - VuforiaMars_ModelTarget
   videoBackground:
     clippingMode: 0
     numDivisions: 2
