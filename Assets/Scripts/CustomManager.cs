@@ -11,12 +11,12 @@ public class CustomManager : NetworkManager {
     {
         Debug.Log("Found Client.");
         // Delete main camera so only one remains.
-        Destroy(Camera.main.gameObject);
+        //Destroy(Camera.main.gameObject);
         // Additively load the scene, keeping the network manager.
         SceneManager.LoadScene("Viewfinder", LoadSceneMode.Additive);
         ClientScene.Ready(conn);
         ClientScene.AddPlayer(conn, 0);
-        VuforiaRuntime.Instance.InitVuforia();
+        //VuforiaRuntime.Instance.InitVuforia();
     }
 
     public override void OnServerSceneChanged(string sceneName)

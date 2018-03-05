@@ -36,13 +36,18 @@ public class TargetMove : MonoBehaviour {
     void AdjustShader(RaycastHit hit)
     {
         var r = hit.transform.GetComponent<Renderer>();
-        if (r.material != targetMaterial)
+        if (r.material.shader != targetMaterial.shader)
         {
+            var c = r.gameObject.AddComponent<PaintedSurface>();
+            c.originalMaterial = r.sharedMaterial;
+
             r.material = targetMaterial;
         }
         else
         {
-            r.material = r.sharedMaterial;
+            var c = r.gameObject.GetComponent<PaintedSurface>();
+            r.material = c.originalMaterial;
+            Destroy(c);
         }
     }
 
