@@ -4,8 +4,6 @@ using UnityEngine.UI;
 using UnityEngine;
 
 public class ScreenHandler : MonoBehaviour {
-    private Vector3[] cameraPositions;
-
     private Mesh[] screens;
 
     private string[] meshNames = new string[] { "Group#423_001" };
@@ -13,7 +11,6 @@ public class ScreenHandler : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        cameraPositions = new Vector3[2];
         screens[0] = screen;
         screens = new Mesh[meshNames.Length + 1];
         for (int i = 1; i <= meshNames.Length; i++)

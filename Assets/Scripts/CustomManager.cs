@@ -22,7 +22,7 @@ public class CustomManager : NetworkManager {
     public override void OnServerSceneChanged(string sceneName)
     {
         Debug.Log("Found Server.");
-        Destroy(Camera.main.gameObject);
+        //Destroy(Camera.main.gameObject);
         SceneManager.LoadScene("Projectionist", LoadSceneMode.Additive);
     }
 }

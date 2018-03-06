@@ -8,14 +8,10 @@ public class SendCommand : MonoBehaviour {
     public Slider[] slider;
     public Button next;
 
-    private int currentView;
-
     Command cmd;
 
 	// Use this for initialization
 	void Start () {
-        currentView = 0;
-
         cmd = new Command();
         // Add slider listeners
         for (int i = 0; i < slider.Length; i++)

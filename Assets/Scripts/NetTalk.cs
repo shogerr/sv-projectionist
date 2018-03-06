@@ -9,7 +9,8 @@ public class NetTalk : NetworkBehaviour {
     [Command]
     void CmdSayHello()
     {
-        Debug.Log("Hello from " + SceneManager.GetActiveScene().name);
+        GameObject.Find("Cube").GetComponent<Renderer>().material = (Material)Resources.Load("Materials/projection", typeof(Material));
+        //Debug.Log("Hello from " + SceneManager.GetActiveScene().name);
     }
 	// Use this for initialization
 	void Start () {
@@ -18,7 +19,7 @@ public class NetTalk : NetworkBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if (!isLocalPlayer)
+		if (isLocalPlayer)
         {
             CmdSayHello();
         }
