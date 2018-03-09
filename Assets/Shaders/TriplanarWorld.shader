@@ -1,9 +1,8 @@
 ﻿Shader "Tri-Planar World Hard" {
     Properties{
         _Side("Side", 2D) = "white" {}
-    _Top("Top", 2D) = "white" {}
-    _Bottom("Bottom", 2D) = "white" {}
-    _SideScale("Side Scale", Float) = 2
+        _Bottom("Bottom", 2D) = "white" {}
+        _SideScale("Side Scale", Float) = 2
         _TopScale("Top Scale", Float) = 2
         _BottomScale("Bottom Scale", Float) = 2
     }

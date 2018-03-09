@@ -9,18 +9,18 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 1242949009193544}
+  m_RootGameObject: {fileID: 1256125942964490}
   m_IsPrefabParent: 1
---- !u!1 &1242949009193544
+--- !u!1 &1256125942964490
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 5
   m_Component:
-  - component: {fileID: 4119197703209432}
-  - component: {fileID: 114656344825845206}
-  - component: {fileID: 114154052284608128}
+  - component: {fileID: 4482378020405840}
+  - component: {fileID: 114822714046921264}
+  - component: {fileID: 114184537459322208}
   m_Layer: 0
   m_Name: CustomManager
   m_TagString: Untagged
@@ -28,12 +28,12 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &4119197703209432
+--- !u!4 &4482378020405840
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1242949009193544}
+  m_GameObject: {fileID: 1256125942964490}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -2.249918, y: 0.48351955, z: -2.2404823}
   m_LocalScale: {x: 1, y: 1, z: 1}
@@ -41,28 +41,28 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &114154052284608128
+--- !u!114 &114184537459322208
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1242949009193544}
+  m_GameObject: {fileID: 1256125942964490}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: cb321b1ee44b08e44ba491476704cd86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  manager: {fileID: 114656344825845206}
+  manager: {fileID: 114822714046921264}
   showGUI: 1
   offsetX: 0
   offsetY: 0
   fontSize: 24
---- !u!114 &114656344825845206
+--- !u!114 &114822714046921264
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1242949009193544}
+  m_GameObject: {fileID: 1256125942964490}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fba2ca5ce23fe0447bc48182b3122290, type: 3}
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_OfflineScene: Offline
   m_OnlineScene: Online
   m_SpawnPrefabs: []
-  m_CustomConfig: 0
+  m_CustomConfig: 1
   m_MaxConnections: 4
   m_ConnectionConfig:
     m_PacketSize: 1440
@@ -126,7 +126,7 @@ MonoBehaviour:
     m_MaxTimerTimeout: 12000
     m_MinNetSimulatorTimeout: 1
     m_MaxNetSimulatorTimeout: 12000
-  m_Channels: 0500000000000000
+  m_Channels: 0500000008000000
   m_UseWebSockets: 0
   m_UseSimulator: 0
   m_SimulatedLatency: 1

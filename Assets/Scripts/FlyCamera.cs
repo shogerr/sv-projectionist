@@ -21,7 +21,7 @@ public class FlyCamera : MonoBehaviour
     public float dampening = .05f; // How much attenuation to final value
 
     public bool rotateOnlyIfMousedown = true;
-    public bool movementStaysFlat = true;
+    public bool movementStaysFlat = false;
 
     private Vector3 lastMouse = new Vector3(255, 255, 255); //kind of in the middle of the screen, rather than at the top (play)
     private float totalRun = 0.2f;
@@ -53,6 +53,7 @@ public class FlyCamera : MonoBehaviour
 
         //Keyboard commands
         Vector3 p = GetBaseInput();
+        Debug.Log(p);
         if (Input.GetKey(KeyCode.LeftShift))
         {
             totalRun += Time.deltaTime;
@@ -88,6 +89,14 @@ public class FlyCamera : MonoBehaviour
     private Vector3 GetBaseInput()
     { //returns the basic values, if it's 0 than it's not active.
         Vector3 p_Velocity = new Vector3();
+        if (Input.GetKey(KeyCode.E))
+        {
+            p_Velocity += new Vector3(0, 1, 0);
+        }
+        if (Input.GetKey(KeyCode.Q))
+        {
+            p_Velocity += new Vector3(0, -1, 0);
+        }
         if (Input.GetKey(KeyCode.W))
         {
             p_Velocity += new Vector3(0, 0, 1);
@@ -103,14 +112,6 @@ public class FlyCamera : MonoBehaviour
         if (Input.GetKey(KeyCode.D))
         {
             p_Velocity += new Vector3(1, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.E))
-        {
-            p_Velocity += new Vector3(0, 1, 0);
-        }
-        if (Input.GetKey(KeyCode.Q))
-        {
-            p_Velocity += new Vector3(0, -1, 0);
         }
         return p_Velocity;
     }
