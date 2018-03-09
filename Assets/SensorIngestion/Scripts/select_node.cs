@@ -13,9 +13,6 @@ public class select_node : MonoBehaviour
     { "Select Node" , "DESKTOP-MJ6FIET" , "EAST SHEARWALL OG MC DAQ LOWER" , "EAST SHEARWALL OG MC DAQ UPPER", "FLOOR ZONE 1 DURING COSNT" , "Weather Station - OSU"
         , "ZONE 1 THERMISTORS"};
 
-
- 
-
     void Start()
     {
         PopulateList();

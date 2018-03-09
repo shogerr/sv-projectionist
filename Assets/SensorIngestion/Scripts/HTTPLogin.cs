@@ -1,20 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.Networking;
 using System.Text;
 using System.Xml;
 using System.IO;
 
 // PURPOSE OF THIS SCRIPT IS TO ACQUIRE THE PHPSESSID REQUIRED FOR ALL HTTP REQUESTS
-public class http_login : MonoBehaviour
+public class HTTPLogin : MonoBehaviour
 {
-    // Use this for initialization
-    public void Start()
+    public void Login()
     {
         UnityWebRequest www = UnityWebRequest.Get("https://analytics.smtresearch.ca/api/?action=logout");
-        www.SendWebRequest(); // 
-        StartCoroutine(GetText("https://analytics.smtresearch.ca/api/?action=login&user_username=osuuser&user_password=peavyhall"));
+        www.SendWebRequest();
+        string user = GameObject.Find("UserField").GetComponentInChildren<InputField>().text;
+        Debug.Log(user);
+        string pass = GameObject.Find("PasswordField").GetComponentInChildren<InputField>().text;
+        StartCoroutine(GetText("https://analytics.smtresearch.ca/api/?action=login&user_username="+user+"&user_password="+pass));
     }
 
     // Update is called once per frame
@@ -37,13 +40,9 @@ public class http_login : MonoBehaviour
 
             XmlNodeList elemList = xDoc.GetElementsByTagName("PHPSESSID");
             GlobalVariables.phpsessid = (elemList[0].InnerXml);
-
         }
     }
 }
-
-
-
 
 public static class GlobalVariables
 {

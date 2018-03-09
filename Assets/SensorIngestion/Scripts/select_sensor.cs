@@ -21,8 +21,6 @@ public class select_sensor : MonoBehaviour {
 
     string dataurl = "https://analytics.smtresearch.ca/api/?action=listSensorData&sensorID=";
 
-        
-
 
     // Use this for initialization
     public void Start () {

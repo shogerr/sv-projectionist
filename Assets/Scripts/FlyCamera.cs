@@ -53,7 +53,6 @@ public class FlyCamera : MonoBehaviour
 
         //Keyboard commands
         Vector3 p = GetBaseInput();
-        Debug.Log(p);
         if (Input.GetKey(KeyCode.LeftShift))
         {
             totalRun += Time.deltaTime;
