@@ -12,7 +12,7 @@ public class WorldState : NetworkBehaviour {
         Transform s = GameObject.Find("Structures").transform;
         var m = s.GetComponentInChildren<Renderer>();
 
-        Vector3 offset = Vector3.Scale(new Vector3(.25f, .25f, 1.5f), (m.bounds.center - Camera.main.transform.position));
+        Vector3 offset = Vector3.Scale(new Vector3(.95f, .95f, 1.5f), (m.bounds.center - Camera.main.transform.position));
         Camera.main.transform.position = offset;
 
         Camera.main.transform.LookAt(m.bounds.center);
