@@ -23,7 +23,6 @@ public static class StringExtensions
 }
 
 public class SensorBridge : MonoBehaviour {
-    public GameObject loginUi;
     public InputField jobIdInput;
 
     private int jobId;
@@ -37,6 +36,7 @@ public class SensorBridge : MonoBehaviour {
 
     // Should they be updated?
     private bool willUpdate = true;
+
 
     public class Reading
     {
@@ -169,15 +169,22 @@ public class SensorBridge : MonoBehaviour {
     {
         string apiURL = "https://analytics.smtresearch.ca/api/";
 
+        private string loginCredential;
+
         private string ConstructURL(APICommand c)
         {
             return apiURL + c.ToString();
         }
 
+        public void setLoginCredential(string s)
+        {
+            loginCredential = s;
+        }
+
         public IEnumerator Request(APICommand c, System.Action<string> callback)
         {
             Debug.Log("Doing action");
-            string cookiehead = "PHPSESSID=" + GlobalVariables.phpsessid;
+            string cookiehead = "PHPSESSID=" + loginCredential;
             UnityWebRequest www = UnityWebRequest.Get(ConstructURL(c));
             www.SetRequestHeader("Cookie", cookiehead);
             yield return www.SendWebRequest();
@@ -225,6 +232,17 @@ public class SensorBridge : MonoBehaviour {
             var c = new APICommand("listSensor", p);
             return c;
         }
+
+        public APICommand LoginUser(string user, string pass)
+        {
+            var p = new List<KeyValuePair<string, string>>() {
+                new KeyValuePair<string, string>("user_username", user),
+                new KeyValuePair<string, string>("user_password", pass)
+            };
+
+            var c = new APICommand("login", p);
+            return c;
+        }
     }
 
     public class APICommand
@@ -267,14 +285,6 @@ public class SensorBridge : MonoBehaviour {
         }
 	}
 
-    public void AllowLogin()
-    {
-        if (!loginUi.activeSelf)
-            loginUi.SetActive(true);
-        else
-            loginUi.SetActive(false);
-    }
-
     public void SetNodes()
     {
         jobId = int.Parse(jobIdInput.text);
@@ -306,6 +316,22 @@ public class SensorBridge : MonoBehaviour {
         }));
     }
 
+    public void LoginUser(string username, string password)
+    {
+        Debug.Log(api);
+        APICommand c = api.LoginUser(username, password);
+        Debug.Log(c);
+        StartCoroutine(api.Request(c, s =>
+        {
+            XmlDocument xDoc = new XmlDocument();
+            xDoc.LoadXml(s);
+
+            XmlNodeList elemList = xDoc.GetElementsByTagName("PHPSESSID");
+            if (elemList != null)
+                api.setLoginCredential((elemList[0].InnerXml));
+        }));
+    }
+    
     public bool SensorsComplete()
     {
         return sensorsComplete;
