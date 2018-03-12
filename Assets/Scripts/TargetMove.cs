@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class TargetMove : MonoBehaviour {
 
@@ -12,8 +13,18 @@ public class TargetMove : MonoBehaviour {
     private BoxCollider boxCollider;
 
     Vector3 newPosition;
-	// Use this for initialization
-	void Start () {
+
+    private int fingerID = -1;
+
+    private void Awake()
+    {
+#if UNITY_EDITOR
+        fingerID = 0;
+#endif
+    }
+
+    // Use this for initialization
+    void Start () {
         newPosition = transform.position;
 	}
 	
@@ -21,10 +32,16 @@ public class TargetMove : MonoBehaviour {
 	void Update () {
         if (Input.GetMouseButtonDown(0))
         {
+            if (EventSystem.current.IsPointerOverGameObject())
+                return;
+
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
+                if (hit.transform.gameObject.GetComponentInParent<Sensor>() ?? null)
+                    return;
+
                 if (hit.transform.gameObject.name != gameObject.name)
                 {
                     AdjustShader(hit);

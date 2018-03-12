@@ -27,12 +27,15 @@ public class SensorBridge : MonoBehaviour {
     public InputField jobIdInput;
 
     private int jobId;
-    private bool sensorsComplete = false;
     public Node[] nodes;
 
     // Reference to api actionables
-    private APICall api;
+    public APICall api;
 
+    // Have all of the sensors been updated?
+    private bool sensorsComplete = false;
+
+    // Should they be updated?
     private bool willUpdate = true;
 
     public class Reading
@@ -45,7 +48,7 @@ public class SensorBridge : MonoBehaviour {
         public int Raw;
         [XmlElement("engUnit")]
         public int EngUnit;
-        [XmlElement("engUnit")]
+        [XmlElement("timestamp")]
         public XmlDateTime TimeStamp;
     }
 
@@ -109,6 +112,14 @@ public class SensorBridge : MonoBehaviour {
         public Node[] Nodes;
     }
 
+    [XmlType("result")]
+    public class SensorReadingList
+    {
+        [XmlArray("readings")]
+        [XmlArrayItem("reading", typeof(Reading))]
+        public Reading[] readings;
+    }
+
     public class XmlDateTime : IXmlSerializable
     {
         public System.DateTime Value { get; set; }
@@ -154,7 +165,7 @@ public class SensorBridge : MonoBehaviour {
         }
     }
 
-    class APICall
+    public class APICall
     {
         string apiURL = "https://analytics.smtresearch.ca/api/";
 
@@ -163,21 +174,25 @@ public class SensorBridge : MonoBehaviour {
             return apiURL + c.ToString();
         }
 
-        public IEnumerator DoAction(APICommand c, System.Action<string> callback)
+        public IEnumerator Request(APICommand c, System.Action<string> callback)
         {
             Debug.Log("Doing action");
             string cookiehead = "PHPSESSID=" + GlobalVariables.phpsessid;
             UnityWebRequest www = UnityWebRequest.Get(ConstructURL(c));
             www.SetRequestHeader("Cookie", cookiehead);
             yield return www.SendWebRequest();
-            if (www.isNetworkError || www.isHttpError) // if we have an error, log it
+
+            // if we have an error, log it
+            if (www.isNetworkError || www.isHttpError) 
             {
                 Debug.Log(www.error);
             }
-            else // if not, show what we got in the request
+            // if not, show what we got in the request
+            else 
             {
-                string sensor_xml = www.downloadHandler.text;
-                callback(sensor_xml);
+                string sensorXml = www.downloadHandler.text;
+                Debug.Log(sensorXml);
+                callback(sensorXml);
             }
         }
 
@@ -212,7 +227,7 @@ public class SensorBridge : MonoBehaviour {
         }
     }
 
-    class APICommand
+    public class APICommand
     {
         string action;
         List<KeyValuePair<string, string>> parameters;
@@ -250,15 +265,6 @@ public class SensorBridge : MonoBehaviour {
 
             willUpdate = false;
         }
-        else if(sensorsComplete)
-        {
-            foreach(Node n in nodes)
-            {
-                Debug.Log(n.NodeID);
-                foreach (Sensor s in n.sensors)
-                    Debug.Log(s.SensorID);
-            }
-        }
 	}
 
     public void AllowLogin()
@@ -273,7 +279,7 @@ public class SensorBridge : MonoBehaviour {
     {
         jobId = int.Parse(jobIdInput.text);
 
-        StartCoroutine(api.DoAction(api.ListNode(jobId), s =>
+        StartCoroutine(api.Request(api.ListNode(jobId), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(NodeList));
             using (var r = new System.IO.StringReader(s))
@@ -286,7 +292,7 @@ public class SensorBridge : MonoBehaviour {
 
     public void SetSensorsFromNode(int nodeId, int i)
     {
-        StartCoroutine(api.DoAction(api.ListSensor(nodeId), s =>
+        StartCoroutine(api.Request(api.ListSensor(nodeId), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(SensorList));
             using (var r = new System.IO.StringReader(s))
@@ -298,5 +304,10 @@ public class SensorBridge : MonoBehaviour {
                     sensorsComplete = true;
             }
         }));
+    }
+
+    public bool SensorsComplete()
+    {
+        return sensorsComplete;
     }
 }
