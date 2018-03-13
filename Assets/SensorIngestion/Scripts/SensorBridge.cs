@@ -23,6 +23,18 @@ public static class StringExtensions
 }
 
 public class SensorBridge : MonoBehaviour {
+    private static SensorBridge _instance;
+
+    public static SensorBridge Instance { get { return _instance; } }
+
+    private void Awake()
+    {
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
+        else
+            _instance = this;
+    }
+
     public InputField jobIdInput;
 
     private int jobId;
@@ -274,7 +286,14 @@ public class SensorBridge : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (willUpdate == true && nodes != null)
+        if (!willUpdate)
+            return;
+
+        if (nodes == null)
+        {
+            SetNodes();
+        }
+        else
         {
             for (int i = 0; i < nodes.Length; i++)
             {
@@ -318,16 +337,14 @@ public class SensorBridge : MonoBehaviour {
 
     public void LoginUser(string username, string password)
     {
-        Debug.Log(api);
         APICommand c = api.LoginUser(username, password);
-        Debug.Log(c);
         StartCoroutine(api.Request(c, s =>
         {
             XmlDocument xDoc = new XmlDocument();
             xDoc.LoadXml(s);
 
             XmlNodeList elemList = xDoc.GetElementsByTagName("PHPSESSID");
-            if (elemList != null)
+            if (elemList[0] != null)
                 api.setLoginCredential((elemList[0].InnerXml));
         }));
     }
