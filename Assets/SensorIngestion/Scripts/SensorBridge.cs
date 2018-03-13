@@ -47,7 +47,12 @@ public class SensorBridge : MonoBehaviour {
     private bool sensorsComplete = false;
 
     // Should they be updated?
-    private bool willUpdate = true;
+    private bool willUpdate = false;
+
+    public bool WillUpdate
+    {
+        set { willUpdate = !willUpdate; }
+    }
 
 
     public class Reading
@@ -183,24 +188,35 @@ public class SensorBridge : MonoBehaviour {
 
         private string loginCredential;
 
+        public string LoginCredential
+        {
+            set
+            {
+                loginCredential = value;
+            }
+            get
+            {
+                return loginCredential;
+            }
+        }
+
         private string ConstructURL(APICommand c)
         {
             return apiURL + c.ToString();
         }
 
-        public void setLoginCredential(string s)
-        {
-            loginCredential = s;
-        }
-
         public IEnumerator Request(APICommand c, System.Action<string> callback)
         {
             Debug.Log("Doing action");
-            string cookiehead = "PHPSESSID=" + loginCredential;
             UnityWebRequest www = UnityWebRequest.Get(ConstructURL(c));
-            www.SetRequestHeader("Cookie", cookiehead);
-            yield return www.SendWebRequest();
 
+            if (loginCredential != null)
+            {
+                string cookiehead = "PHPSESSID=" + loginCredential;
+                www.SetRequestHeader("Cookie", cookiehead);
+            }
+
+            yield return www.SendWebRequest();
             // if we have an error, log it
             if (www.isNetworkError || www.isHttpError) 
             {
@@ -283,9 +299,14 @@ public class SensorBridge : MonoBehaviour {
     void Start () {
         api = new APICall();
 	}
-	
-	// Update is called once per frame
-	void Update () {
+
+    private void Update()
+    {
+        UpdateBridge();
+    }
+
+    // Update is called once per frame
+    public void UpdateBridge () {
         if (!willUpdate)
             return;
 
@@ -306,6 +327,9 @@ public class SensorBridge : MonoBehaviour {
 
     public void SetNodes()
     {
+        if (api.LoginCredential == null)
+            return;
+
         jobId = int.Parse(jobIdInput.text);
 
         StartCoroutine(api.Request(api.ListNode(jobId), s =>
@@ -321,6 +345,9 @@ public class SensorBridge : MonoBehaviour {
 
     public void SetSensorsFromNode(int nodeId, int i)
     {
+        if (api.LoginCredential == null)
+            return;
+
         StartCoroutine(api.Request(api.ListSensor(nodeId), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(SensorList));
@@ -338,6 +365,7 @@ public class SensorBridge : MonoBehaviour {
     public void LoginUser(string username, string password)
     {
         APICommand c = api.LoginUser(username, password);
+        Debug.Log(c);
         StartCoroutine(api.Request(c, s =>
         {
             XmlDocument xDoc = new XmlDocument();
@@ -345,7 +373,7 @@ public class SensorBridge : MonoBehaviour {
 
             XmlNodeList elemList = xDoc.GetElementsByTagName("PHPSESSID");
             if (elemList[0] != null)
-                api.setLoginCredential((elemList[0].InnerXml));
+                api.LoginCredential = (elemList[0].InnerXml);
         }));
     }
     
