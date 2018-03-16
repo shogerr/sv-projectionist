@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEditor;
 
 public class Structures : MonoBehaviour {
-    public Material setMaterial;
+    public Material defaultMaterial;
 
     // Generate UV coordinates for children.
     public void GenerateAllChildrenUVs()
@@ -56,15 +56,16 @@ public class Structures : MonoBehaviour {
         var c = GetComponentsInChildren<Renderer>(); 
         for (int i = 0; i < c.Length; i++)
         {
-            c[i].material = setMaterial;
+            c[i].material = defaultMaterial;
         }
 
     }
-    public void HideNonMeshFromStructures()
+    public void DeactivateNonMesh()
     {
         Transform[] c = GetComponentsInChildren<Transform>();
         foreach (Transform t in c)
         {
+            // If object is not the root parent or itself
             if (t.gameObject.GetComponent<MeshFilter>() == null && t.parent != c[0] && t != c[0])
                 t.gameObject.SetActive(false);
         }

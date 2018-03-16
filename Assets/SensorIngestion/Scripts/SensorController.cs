@@ -16,12 +16,23 @@ public class SensorController : MonoBehaviour {
         else
             _instance = this;
     }
+
 	// Use this for initialization
 	void Start () {
         sensorBridge = SensorBridge.Instance;
-        Debug.Log(sensorBridge);
 	}
 	
+    public void DebugSensors()
+    {
+        foreach (SensorBridge.Node n in sensorBridge.nodes)
+            Debug.Log(n.ToString());
+    }
+
+    /*
+    public SensorBridge.Sensor FindSensor(int sensorID)
+    {
+    }
+    */
 	// Update is called once per frame
 	void Update () {
 	}

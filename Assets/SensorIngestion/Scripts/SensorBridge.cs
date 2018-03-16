@@ -46,15 +46,6 @@ public class SensorBridge : MonoBehaviour {
     // Have all of the sensors been updated?
     private bool sensorsComplete = false;
 
-    // Should they be updated?
-    private bool willUpdate = false;
-
-    public bool WillUpdate
-    {
-        set { willUpdate = !willUpdate; }
-    }
-
-
     public class Reading
     {
         [XmlElement("dataID")]
@@ -111,6 +102,18 @@ public class SensorBridge : MonoBehaviour {
         public XmlDateTime Modified;
         [XmlIgnore]
         public Sensor[] sensors;
+
+        public override string ToString()
+        {
+            var s = "";
+            var allFields = this.GetType().GetFields(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
+            foreach (var f in allFields)
+            {
+                s += f.Name + " : " + f.GetValue(this) + "\n";
+            }
+
+            return s;
+        }
     }
 
     [XmlType("result")]
@@ -231,10 +234,12 @@ public class SensorBridge : MonoBehaviour {
             }
         }
 
-        public APICommand ListSensorData(int sensorID)
+        public APICommand ListSensorData(int sensorID, int startDate, int endDate)
         {
             var p = new List<KeyValuePair<string, string>>() {
-                new KeyValuePair<string, string>("sensorID", sensorID.ToString())
+                new KeyValuePair<string, string>("sensorID", sensorID.ToString()),
+                new KeyValuePair<string, string>("startDate", startDate.ToString()),
+                new KeyValuePair<string, string>("endDate", endDate.ToString())
             };
 
             var c = new APICommand("listSensorData", p);
@@ -300,28 +305,29 @@ public class SensorBridge : MonoBehaviour {
         api = new APICall();
 	}
 
-    private void Update()
+    // Wrapper to allow UI button call of UpdateBridge
+    public void UpdateBridgeCaller()
     {
-        UpdateBridge();
+        Debug.Log("Updating Bridge");
+        StartCoroutine(UpdateBridge());
     }
 
     // Update is called once per frame
-    public void UpdateBridge () {
-        if (!willUpdate)
-            return;
-
+    public IEnumerator UpdateBridge() {
         if (nodes == null)
         {
             SetNodes();
         }
-        else
-        {
-            for (int i = 0; i < nodes.Length; i++)
-            {
-                SetSensorsFromNode(nodes[i].NodeID, i);
-            }
 
-            willUpdate = false;
+        while(nodes == null)
+        {
+            Debug.Log("In updater");
+            yield return null;
+        }
+
+        for (int i = 0; i < nodes.Length; i++)
+        {
+            SetSensorsFromNode(nodes[i].NodeID, i);
         }
 	}
 

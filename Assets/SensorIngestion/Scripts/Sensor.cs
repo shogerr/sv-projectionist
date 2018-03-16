@@ -17,10 +17,16 @@ public class Sensor : MonoBehaviour {
 
     public bool willUpdate = false;
 
+    private void Start()
+    {
+    }
+
     void Update()
     {
+        /*
         if (sensorBridge.SensorsComplete() && readings != null)
             Debug.Log(readings.Length);
+            */
 
         if (sensor != null && willUpdate == true)
         {
@@ -37,7 +43,8 @@ public class Sensor : MonoBehaviour {
 
     public void UpdateSensorReadings()
     {
-        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(sensorID), s =>
+        // Updating Sensor
+        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(sensorID, '*', '*'), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(SensorBridge.SensorReadingList));
             using (var r = new System.IO.StringReader(s))
