@@ -7,5 +7,6 @@ namespace Assets.SensorIngestion.Scripts
 {
     class Class1
     {
+        int x;
     }
 }
