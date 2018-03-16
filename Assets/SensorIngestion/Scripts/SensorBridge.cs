@@ -38,7 +38,7 @@ public class SensorBridge : MonoBehaviour {
     public InputField jobIdInput;
 
     private int jobId;
-    public Node[] nodes;
+    public List<Node> nodes;
 
     // Reference to api actionables
     public APICall api;
@@ -101,7 +101,7 @@ public class SensorBridge : MonoBehaviour {
         [XmlElement("modified")]
         public XmlDateTime Modified;
         [XmlIgnore]
-        public Sensor[] sensors;
+        public List<Sensor> sensors;
 
         public override string ToString()
         {
@@ -121,7 +121,7 @@ public class SensorBridge : MonoBehaviour {
     {
         [XmlArray("sensors")]
         [XmlArrayItem("sensor", typeof(Sensor))]
-        public Sensor[] Sensors;
+        public List<Sensor> Sensors;
     }
 
     [XmlType("result")]
@@ -129,7 +129,7 @@ public class SensorBridge : MonoBehaviour {
     {
         [XmlArray("nodes")]
         [XmlArrayItem("node", typeof(Node))]
-        public Node[] Nodes;
+        public List<Node> Nodes;
     }
 
     [XmlType("result")]
@@ -137,7 +137,7 @@ public class SensorBridge : MonoBehaviour {
     {
         [XmlArray("readings")]
         [XmlArrayItem("reading", typeof(Reading))]
-        public Reading[] readings;
+        public List<Reading> readings;
     }
 
     public class XmlDateTime : IXmlSerializable
@@ -362,7 +362,7 @@ public class SensorBridge : MonoBehaviour {
                 SensorList l = (SensorList)d.Deserialize(r);
                 nodes[i].sensors = l.Sensors;
 
-                if (i == nodes.Length-1)
+                if (i == nodes.Count-1)
                     sensorsComplete = true;
             }
         }));

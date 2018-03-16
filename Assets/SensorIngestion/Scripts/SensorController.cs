@@ -25,7 +25,13 @@ public class SensorController : MonoBehaviour {
     public void DebugSensors()
     {
         foreach (SensorBridge.Node n in sensorBridge.nodes)
+        {
             Debug.Log(n.ToString());
+            foreach (SensorBridge.Sensor s in n.sensors)
+            {
+                Debug.Log(s);
+            }
+        }
     }
 
     /*
