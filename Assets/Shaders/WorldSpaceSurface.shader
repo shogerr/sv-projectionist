@@ -46,7 +46,8 @@
 		void vert(inout appdata_full v) {
 
 			// Get the worldspace normal after transformation, and ensure it's unit length.
-			float3 n = normalize(mul(unity_ObjectToWorld, v.normal).xyz);
+			//Line is creating compilation errors
+			float3 n = normalize(mul(unity_ObjectToWorld, v.vertex).xyz);
 
 			// Get the closest vector in the polygon's plane to world up.
 			// We'll use this as the "v" direction of our texture.
