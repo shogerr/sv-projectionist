@@ -325,7 +325,7 @@ public class SensorBridge : MonoBehaviour {
             yield return null;
         }
 
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 0; i < nodes.Count; i++)
         {
             SetSensorsFromNode(nodes[i].NodeID, i);
         }
