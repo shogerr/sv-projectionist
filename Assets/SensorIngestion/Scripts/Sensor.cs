@@ -50,7 +50,7 @@ public class Sensor : MonoBehaviour {
             using (var r = new System.IO.StringReader(s))
             {
                 SensorBridge.SensorReadingList l = (SensorBridge.SensorReadingList)d.Deserialize(r);
-                readings = l.readings;
+                readings = l.readings.ToArray();
             }
         }));
     }
