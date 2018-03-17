@@ -7,6 +7,7 @@ using UnityEditor;
 [CustomEditor(typeof(Structures))]
 public class StructuresEditor : Editor
 {
+    bool meshActive = true;
     public override void OnInspectorGUI()
     {
         DrawDefaultInspector();
@@ -32,9 +33,11 @@ public class StructuresEditor : Editor
         {
             u.CullNonMeshFromStructures();
         }
-        if (GUILayout.Button("Deactivate Non-Mesh"))
+
+        if (GUILayout.Button("Activate Non-Mesh"))
         {
-            u.HideNonMeshFromStructures();
+            Debug.Log(meshActive);
+            u.DeactivateNonMesh();
         }
     }
 }
