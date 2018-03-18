@@ -8,9 +8,9 @@ public class Sensor : MonoBehaviour {
 
     public SensorBridge sensorBridge;
     public SensorBridge.Sensor sensor;
-    public SensorBridge.Reading[] readings;
+    public List<SensorBridge.Reading> readings;
 
-    public System.DateTime startDate;
+    public System.DateTime StartDate;
     public System.DateTime EndDate;
 
     public int sensorID;
@@ -23,28 +23,24 @@ public class Sensor : MonoBehaviour {
 
     void Update()
     {
-        /*
-        if (sensorBridge.SensorsComplete() && readings != null)
-            Debug.Log(readings.Length);
-            */
-
-        if (sensor != null && willUpdate == true)
-        {
-            UpdateSensorReadings();
-        }
-        if (readings != null)
-        {
-            foreach (SensorBridge.Reading r in readings)
-            {
-                Debug.Log(r);
-            }
-        }
     }
 
     public void UpdateSensorReadings()
     {
+        sensor = sensorBridge.FindSensor(sensorID);
+
+        Debug.Log(sensor.SensorID);
+        if (sensor == null)
+            return;
+
+        var startDate = StartDate.ToString("yyyy-MM-dd");
+        var endDate = EndDate.ToString("yyyy-MM-dd");
+
+        Debug.Log(startDate);
+        Debug.Log(endDate);
+
         // Updating Sensor
-        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(sensorID, '*', '*'), s =>
+        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(sensorID, startDate, endDate), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(SensorBridge.SensorReadingList));
             using (var r = new System.IO.StringReader(s))

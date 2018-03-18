@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class TargetMove : MonoBehaviour {
-
+    private SensorController sensorController;
     public Material hiddenMaterial;
     public Material targetMaterial;
 
@@ -24,8 +24,10 @@ public class TargetMove : MonoBehaviour {
     }
 
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         newPosition = transform.position;
+        sensorController = SensorController.Instance;
 	}
 	
 	// Update is called once per frame
@@ -39,9 +41,14 @@ public class TargetMove : MonoBehaviour {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             if (Physics.Raycast(ray, out hit))
             {
+                // Set the active sensor for SensorController to the clicked sensor
                 if (hit.transform.gameObject.GetComponentInParent<Sensor>() ?? null)
+                {
+                    sensorController.ActiveSensorObject = hit.transform.gameObject.GetComponentInParent<Sensor>();
                     return;
+                }
 
+                // Otherwise set the structure's shader
                 if (hit.transform.gameObject.name != gameObject.name)
                 {
                     AdjustShader(hit);

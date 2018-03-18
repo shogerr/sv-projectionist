@@ -5,6 +5,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Xml;
 using System.Xml.Serialization;
+using System.Linq;
 
 public static class StringExtensions
 {
@@ -49,15 +50,15 @@ public class SensorBridge : MonoBehaviour {
     public class Reading
     {
         [XmlElement("dataID")]
-        public int dataID;
-        [XmlElement("sensorID")]
+        public double dataID;
+        //[XmlElement("sensorID")]
         public int SensorID;
         [XmlElement("raw")]
         public int Raw;
         [XmlElement("engUnit")]
         public int EngUnit;
         [XmlElement("timestamp")]
-        public XmlDateTime TimeStamp;
+        public XmlDateTimeMilliSeconds TimeStamp;
     }
 
     public class Sensor
@@ -140,11 +141,26 @@ public class SensorBridge : MonoBehaviour {
         public List<Reading> readings;
     }
 
+    public class XmlDateTimeMilliSeconds : XmlDateTime
+    {
+        private const string XML_DATE_FORMAT = "yyyy-MM-dd' 'HH:mm:ss.FFF";
+
+        public static implicit operator System.DateTime(XmlDateTimeMilliSeconds custom)
+        {
+            return custom.Value;
+        }
+
+        public static implicit operator XmlDateTimeMilliSeconds(System.DateTime custom)
+        {
+            return new XmlDateTimeMilliSeconds() { Value = custom };
+        }
+    }
+
     public class XmlDateTime : IXmlSerializable
     {
         public System.DateTime Value { get; set; }
         public bool HasValue { get { return Value != System.DateTime.MinValue; } }
-        private const string XML_DATE_FORMAT = "yyyy-MM-dd' 'HH:mm:ss";
+        private const string XML_DATE_FORMAT = "yyyy-MM-dd' 'HH:mm:ss.FFF";
 
         public System.Xml.Schema.XmlSchema GetSchema()
         {
@@ -234,12 +250,12 @@ public class SensorBridge : MonoBehaviour {
             }
         }
 
-        public APICommand ListSensorData(int sensorID, int startDate, int endDate)
+        public APICommand ListSensorData(int sensorID, string startDate, string endDate)
         {
             var p = new List<KeyValuePair<string, string>>() {
                 new KeyValuePair<string, string>("sensorID", sensorID.ToString()),
-                new KeyValuePair<string, string>("startDate", startDate.ToString()),
-                new KeyValuePair<string, string>("endDate", endDate.ToString())
+                new KeyValuePair<string, string>("startDate", startDate),
+                new KeyValuePair<string, string>("endDate", endDate)
             };
 
             var c = new APICommand("listSensorData", p);
@@ -321,11 +337,10 @@ public class SensorBridge : MonoBehaviour {
 
         while(nodes == null)
         {
-            Debug.Log("In updater");
             yield return null;
         }
 
-        for (int i = 0; i < nodes.Length; i++)
+        for (int i = 0; i < nodes.Count; i++)
         {
             SetSensorsFromNode(nodes[i].NodeID, i);
         }
@@ -382,7 +397,20 @@ public class SensorBridge : MonoBehaviour {
                 api.LoginCredential = (elemList[0].InnerXml);
         }));
     }
-    
+
+    public Node FindNode(int nodeID)
+    {
+        return nodes.Find(x => x.NodeID == nodeID);
+    }
+
+    public Sensor FindSensor(int sensorID)
+    {
+        return (from n in nodes
+                from s in n.sensors
+                where s.SensorID == sensorID
+                select s).FirstOrDefault();
+    }
+
     public bool SensorsComplete()
     {
         return sensorsComplete;
