@@ -34,6 +34,7 @@ public class TargetMove : MonoBehaviour {
 	void Update () {
         if (Input.GetMouseButtonDown(0))
         {
+            // If this is a UI object, just return.
             if (EventSystem.current.IsPointerOverGameObject())
                 return;
 
@@ -44,7 +45,8 @@ public class TargetMove : MonoBehaviour {
                 // Set the active sensor for SensorController to the clicked sensor
                 if (hit.transform.gameObject.GetComponentInParent<Sensor>() ?? null)
                 {
-                    sensorController.ActiveSensorObject = hit.transform.gameObject.GetComponentInParent<Sensor>();
+                    if (sensorController != null)
+                        sensorController.ActiveSensorObject = hit.transform.gameObject.GetComponentInParent<Sensor>();
                     return;
                 }
 

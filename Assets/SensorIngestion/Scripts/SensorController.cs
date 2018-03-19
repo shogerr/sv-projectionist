@@ -27,7 +27,7 @@ public class SensorController : MonoBehaviour {
 
     void Update()
     {
-        if (ActiveSensorObject != null)
+        if (ActiveSensorObject != null && GameObject.Find("SensorController").GetComponentInChildren<Canvas>() != null)
             GameObject.Find("ActiveSensorText").GetComponent<UnityEngine.UI.Text>().text = ActiveSensorObject.name;
     }
 	

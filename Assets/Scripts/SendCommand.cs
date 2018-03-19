@@ -34,7 +34,15 @@ public class SendCommand : MonoBehaviour {
         Debug.Log(i);
         cmd.name = slider[i].name;
         cmd.value = slider[i].value;
-        udp.sendString(JsonUtility.ToJson(cmd));
+        udp.SendString(JsonUtility.ToJson(cmd));
+    }
+
+    public void SendVisualization()
+    {
+        VisualizationData v = new VisualizationData();
+        Sensor s = GameObject.Find("SensorController").GetComponent<SensorController>().ActiveSensorObject;
+        v.values = s.ReadingsArray();
+        udp.SendString(JsonUtility.ToJson(v));
     }
 
     // JSON ready class for serialization
@@ -43,5 +51,18 @@ public class SendCommand : MonoBehaviour {
     {
         public string name;
         public float value;
+    }
+
+    [System.Serializable]
+    public class Visualization
+    {
+        public int SensorID;
+        public string StartDate;
+        public string EndDate;
+    }
+
+    public class VisualizationData
+    {
+        public int[] values; 
     }
 }

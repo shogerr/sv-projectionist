@@ -13,7 +13,7 @@ public class Sensor : MonoBehaviour {
     public System.DateTime StartDate;
     public System.DateTime EndDate;
 
-    public int sensorID;
+    public int SensorID;
 
     public bool willUpdate = false;
 
@@ -27,7 +27,7 @@ public class Sensor : MonoBehaviour {
 
     public void UpdateSensorReadings()
     {
-        sensor = sensorBridge.FindSensor(sensorID);
+        sensor = sensorBridge.FindSensor(SensorID);
 
         Debug.Log(sensor.SensorID);
         if (sensor == null)
@@ -40,7 +40,7 @@ public class Sensor : MonoBehaviour {
         Debug.Log(endDate);
 
         // Updating Sensor
-        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(sensorID, startDate, endDate), s =>
+        StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(SensorID, startDate, endDate), s =>
         {
             XmlSerializer d = new XmlSerializer(typeof(SensorBridge.SensorReadingList));
             using (var r = new System.IO.StringReader(s))
@@ -49,5 +49,17 @@ public class Sensor : MonoBehaviour {
                 readings = l.readings;
             }
         }));
+    }
+
+    public int[] ReadingsArray()
+    {
+        int[] a = new int[readings.Count];
+        int i = 0;
+        foreach (SensorBridge.Reading r in readings)
+        {
+            a[i] = r.Raw;
+            i++;
+        }
+        return a;
     }
 }

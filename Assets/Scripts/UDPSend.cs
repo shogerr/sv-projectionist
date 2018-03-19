@@ -38,7 +38,7 @@ public class UDPSend : MonoBehaviour {
 	void Update () {
 	}
 
-    public void sendString(string msg)
+    public void SendString(string msg)
     {
         try
         {
