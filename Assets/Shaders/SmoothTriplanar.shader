@@ -42,14 +42,14 @@
             // TOP / BOTTOM
             float3 y = 0;
             if (IN.worldNormal.y > 0) {
-                y = tex2D(_Top, frac(IN.worldPos.zx * _TopScale)) * abs(IN.worldNormal.y);
+                y = tex2D(_MainTex, frac(IN.worldPos.zx * _TopScale)) * abs(IN.worldNormal.y);
             }
             else {
                 y = tex2D(_MainTex, frac(IN.worldPos.zx * _BottomScale)) * abs(IN.worldNormal.y);
             }
 
             // SIDE Z	
-            float3 z = tex2D(_Side, frac(IN.worldPos.xy * _SideScale)) * abs(IN.worldNormal.z);
+            float3 z = tex2D(_MainTex, frac(IN.worldPos.xy * _SideScale)) * abs(IN.worldNormal.z);
 
             o.Albedo = z;
             o.Albedo = lerp(o.Albedo, x, projNormal.x);
