@@ -41,6 +41,7 @@ public class SendCommand : MonoBehaviour {
     {
         VisualizationData v = new VisualizationData();
         Sensor s = GameObject.Find("SensorController").GetComponent<SensorController>().ActiveSensorObject;
+        v.visualization = GameObject.Find("VisualizationSelection").GetComponentInChildren<Text>().text.ToLower();
         v.values = s.ReadingsArray();
         udp.SendString(JsonUtility.ToJson(v));
     }
@@ -60,9 +61,10 @@ public class SendCommand : MonoBehaviour {
         public string StartDate;
         public string EndDate;
     }
-
+    [System.Serializable]
     public class VisualizationData
     {
+        public string visualization;
         public int[] values; 
     }
 }
