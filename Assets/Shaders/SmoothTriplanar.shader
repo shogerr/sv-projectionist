@@ -2,12 +2,6 @@
     Properties{
         _Color("Color", Color) = (0,0,0,1)
         _MainTex("Texture", 2D) = "black" {}
-        _Side("Side", 2D) = "white" {}
-        _Top("Top", 2D) = "white" {}
-        _Bottom("Bottom", 2D) = "white" {}
-        _SideScale("Side Scale", Float) = 2
-        _TopScale("Top Scale", Float) = 2
-        _BottomScale("Bottom Scale", Float) = 2
     }
 
     SubShader{
@@ -24,8 +18,8 @@
         #pragma surface surf NoLighting
         #pragma exclude_renderers flash
 
-        sampler2D _Side, _Top, _Bottom, _MainTex;
-        float _SideScale, _TopScale, _BottomScale;
+        sampler2D _MainTex;
+        float4 _MainTex_ST;
         fixed4 _COLOR;
 
         struct Input {
@@ -36,20 +30,14 @@
         void surf(Input IN, inout SurfaceOutput o) {
             float3 projNormal = saturate(pow(IN.worldNormal * 1.4, 4));
 
+            float2 offset = IN.worldPos.zy * _MainTex_ST.xy + _MainTex_ST.zw;
             // SIDE X
-            float3 x = tex2D(_MainTex, frac(IN.worldPos.zy * _SideScale)) * abs(IN.worldNormal.x);
-
+            float3 x = tex2D(_MainTex, offset) * abs(IN.worldNormal.x);
             // TOP / BOTTOM
-            float3 y = 0;
-            if (IN.worldNormal.y > 0) {
-                y = tex2D(_MainTex, frac(IN.worldPos.zx * _TopScale)) * abs(IN.worldNormal.y);
-            }
-            else {
-                y = tex2D(_MainTex, frac(IN.worldPos.zx * _BottomScale)) * abs(IN.worldNormal.y);
-            }
-
+            float3 y = tex2D(_MainTex, IN.worldPos.xz * _MainTex_ST.xy + _MainTex_ST.zw) * abs(IN.worldNormal.y);
+            
             // SIDE Z	
-            float3 z = tex2D(_MainTex, frac(IN.worldPos.xy * _SideScale)) * abs(IN.worldNormal.z);
+            float3 z = tex2D(_MainTex, IN.worldPos.xy * _MainTex_ST.xy + _MainTex_ST.zw) * abs(IN.worldNormal.z);
 
             o.Albedo = z;
             o.Albedo = lerp(o.Albedo, x, projNormal.x);

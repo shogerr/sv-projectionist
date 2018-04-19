@@ -23,11 +23,6 @@ public class SensorMesh : MonoBehaviour {
     void OnMouseOver()
     {
         meshRenderer.material.color = targetColor;
-        if (sensor.willUpdate == true)
-        {
-            sensor.UpdateSensorReadings();
-            sensor.willUpdate = false;
-        }
     }
 
     void OnMouseExit()

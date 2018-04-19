@@ -7,15 +7,16 @@ using UnityEngine;
 public class Sensor : MonoBehaviour {
 
     public SensorBridge sensorBridge;
-    public SensorBridge.Sensor sensor;
+    private SensorBridge.Sensor sensor;
+
     public List<SensorBridge.Reading> readings;
+
+    public GameObject WorldObject;
 
     public System.DateTime StartDate;
     public System.DateTime EndDate;
 
     public int SensorID;
-
-    public bool willUpdate = false;
 
     private void Start()
     {
@@ -23,21 +24,27 @@ public class Sensor : MonoBehaviour {
 
     void Update()
     {
+        ModifyWorldObjet();
+    }
+
+    public void ModifyWorldObjet()
+    {
+        if (WorldObject == null || readings == null || readings.Count == 0) return;
+        
+        var value = readings[0].EngUnit;
+        Debug.Log(Mathf.Clamp(value, 0, 1.0F));
+        WorldObject.GetComponent<Renderer>().material.color = new Color(Mathf.Clamp(value, 0, 1.0F), 0, 0);
     }
 
     public void UpdateSensorReadings()
     {
         sensor = sensorBridge.FindSensor(SensorID);
 
-        Debug.Log(sensor.SensorID);
         if (sensor == null)
             return;
 
         var startDate = StartDate.ToString("yyyy-MM-dd");
         var endDate = EndDate.ToString("yyyy-MM-dd");
-
-        Debug.Log(startDate);
-        Debug.Log(endDate);
 
         // Updating Sensor
         StartCoroutine(sensorBridge.api.Request(sensorBridge.api.ListSensorData(SensorID, startDate, endDate), s =>
@@ -51,9 +58,11 @@ public class Sensor : MonoBehaviour {
         }));
     }
 
-    public int[] ReadingsArray()
+    public double[] ReadingsArray()
     {
-        int[] a = new int[readings.Count];
+        if (readings == null) return null;
+
+        double[] a = new double[readings.Count];
         int i = 0;
         foreach (SensorBridge.Reading r in readings)
         {

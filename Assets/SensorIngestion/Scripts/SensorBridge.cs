@@ -7,34 +7,10 @@ using System.Xml;
 using System.Xml.Serialization;
 using System.Linq;
 
-public static class StringExtensions
-{
-    public static bool IsNullOrWhiteSpace(string value)
-    {
-        if (value != null)
-        {
-            for (int i = 0; i < value.Length; i++)
-            {
-                if (!char.IsWhiteSpace(value[i]))
-                    return false;
-            }
-        }
-        return true;
-    }
-}
-
 public class SensorBridge : MonoBehaviour {
     private static SensorBridge _instance;
 
     public static SensorBridge Instance { get { return _instance; } }
-
-    private void Awake()
-    {
-        if (_instance != null && _instance != this)
-            Destroy(this.gameObject);
-        else
-            _instance = this;
-    }
 
     public InputField jobIdInput;
 
@@ -42,8 +18,16 @@ public class SensorBridge : MonoBehaviour {
     public List<Node> nodes;
 
     // Reference to api actionables
-    public APICall api;
+    public SmtApiCaller api;
 
+    public bool LoggedIn
+    {
+        set { }
+        get {
+            if (api == null) return false;
+            return api.LoginCredential == null ? false : true;
+        }
+    }
     // Have all of the sensors been updated?
     private bool sensorsComplete = false;
 
@@ -54,17 +38,19 @@ public class SensorBridge : MonoBehaviour {
         //[XmlElement("sensorID")]
         public int SensorID;
         [XmlElement("raw")]
-        public int Raw;
+        public double Raw;
         [XmlElement("engUnit")]
-        public int EngUnit;
+        public float EngUnit;
         [XmlElement("timestamp")]
-        public XmlDateTimeMilliSeconds TimeStamp;
+        public XmlDateTime TimeStamp;
     }
 
     public class Sensor
     {
         [XmlElement("sensorID")]
         public int SensorID;
+        [XmlElement("name")]
+        public string Name;
         [XmlElement("input")]
         public int Input;
         [XmlElement("sensorTypeID")]
@@ -181,7 +167,6 @@ public class SensorBridge : MonoBehaviour {
                 Value = XmlConvert.ToDateTime(someDate, XML_DATE_FORMAT);
             }
         }
-
         public void WriteXml(System.Xml.XmlWriter writer)
         {
             if (Value == System.DateTime.MinValue)
@@ -201,7 +186,7 @@ public class SensorBridge : MonoBehaviour {
         }
     }
 
-    public class APICall
+    public class SmtApiCaller
     {
         string apiURL = "https://analytics.smtresearch.ca/api/";
 
@@ -226,7 +211,7 @@ public class SensorBridge : MonoBehaviour {
 
         public IEnumerator Request(APICommand c, System.Action<string> callback)
         {
-            Debug.Log("Doing action");
+            Debug.Log("Doing Request");
             UnityWebRequest www = UnityWebRequest.Get(ConstructURL(c));
 
             if (loginCredential != null)
@@ -282,7 +267,7 @@ public class SensorBridge : MonoBehaviour {
             return c;
         }
 
-        public APICommand LoginUser(string user, string pass)
+        public APICommand Login(string user, string pass)
         {
             var p = new List<KeyValuePair<string, string>>() {
                 new KeyValuePair<string, string>("user_username", user),
@@ -290,6 +275,12 @@ public class SensorBridge : MonoBehaviour {
             };
 
             var c = new APICommand("login", p);
+            return c;
+        }
+
+        public APICommand Logout()
+        {
+            var c = new APICommand("logout", null);
             return c;
         }
     }
@@ -307,48 +298,53 @@ public class SensorBridge : MonoBehaviour {
 
         public override string ToString()
         {
-            string parameterString = "";
-            foreach (KeyValuePair<string, string> p in parameters)
+            if (parameters != null)
             {
-                parameterString += "&" + p.Key + "=" + p.Value;
+                string parameterString = "";
+                foreach (KeyValuePair<string, string> p in parameters)
+                {
+                    parameterString += "&" + p.Key + "=" + p.Value;
+                }
+                return "?action=" + action + parameterString;
             }
-            return "?action=" + action + parameterString;
+            else return "?action=" + action;
         }
     }
+    private void Awake()
+    {
+        // Make the object a singleton
+        if (_instance != null && _instance != this)
+            Destroy(this.gameObject);
+        else
+            _instance = this;
 
-    // Use this for initialization
-    void Start () {
-        api = new APICall();
-	}
+        // Create the api reference 
+        api = new SmtApiCaller();
+    }
 
     // Wrapper to allow UI button call of UpdateBridge
     public void UpdateBridgeCaller()
     {
-        Debug.Log("Updating Bridge");
+        SensorBridge.Instance.nodes = null;
         StartCoroutine(UpdateBridge());
     }
 
-    // Update is called once per frame
+    // Update all nodes and sensors
     public IEnumerator UpdateBridge() {
         if (nodes == null)
-        {
             SetNodes();
-        }
 
         while(nodes == null)
-        {
             yield return null;
-        }
 
         for (int i = 0; i < nodes.Count; i++)
-        {
             SetSensorsFromNode(nodes[i].NodeID, i);
-        }
 	}
 
+    // Set the nodes SensorBridge holds
     public void SetNodes()
     {
-        if (api.LoginCredential == null)
+        if (api == null || api.LoginCredential == null)
             return;
 
         jobId = int.Parse(jobIdInput.text);
@@ -364,6 +360,7 @@ public class SensorBridge : MonoBehaviour {
         }));
     }
 
+    // Create a list of sensors for a given node
     public void SetSensorsFromNode(int nodeId, int i)
     {
         if (api.LoginCredential == null)
@@ -385,8 +382,7 @@ public class SensorBridge : MonoBehaviour {
 
     public void LoginUser(string username, string password)
     {
-        APICommand c = api.LoginUser(username, password);
-        Debug.Log(c);
+        APICommand c = api.Login(username, password);
         StartCoroutine(api.Request(c, s =>
         {
             XmlDocument xDoc = new XmlDocument();
@@ -398,11 +394,18 @@ public class SensorBridge : MonoBehaviour {
         }));
     }
 
+    public void Logout()
+    {
+        StartCoroutine(api.Request(api.Logout(), s => { }));
+        api.LoginCredential = null;
+    }
+
     public Node FindNode(int nodeID)
     {
         return nodes.Find(x => x.NodeID == nodeID);
     }
 
+    // Find a sensor by ID value.
     public Sensor FindSensor(int sensorID)
     {
         return (from n in nodes

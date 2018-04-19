@@ -65,6 +65,6 @@ public class SendCommand : MonoBehaviour {
     public class VisualizationData
     {
         public string visualization;
-        public int[] values; 
+        public double[] values; 
     }
 }
