@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEngine.EventSystems;
 
 public class TargetMove : MonoBehaviour {
@@ -15,6 +16,16 @@ public class TargetMove : MonoBehaviour {
     Vector3 newPosition;
 
     private int fingerID = -1;
+
+    public InputField inputTilingX;
+    public InputField inputTilingY;
+    public InputField inputOffsetX;
+    public InputField inputOffsetY;
+
+    private float tilingX = 1;
+    private float tilingY = 1;
+    private float offsetX = 0;
+    private float offsetY = 0;
 
     private void Awake()
     {
@@ -58,6 +69,16 @@ public class TargetMove : MonoBehaviour {
             }
         }
 	}
+
+    public void SetTilingAndOffset ()
+    {
+        tilingX = inputTilingX.text.Length > 0 ? float.Parse(inputTilingX.text) : tilingX;
+        tilingY = inputTilingY.text.Length > 0 ? float.Parse(inputTilingY.text) : tilingY;
+        offsetX = inputOffsetX.text.Length > 0 ? float.Parse(inputOffsetX.text) : offsetX;
+        offsetY = inputOffsetX.text.Length > 0 ? float.Parse(inputOffsetY.text) : offsetY;
+        targetMaterial.mainTextureScale = new Vector2(tilingX, tilingY);
+        targetMaterial.mainTextureOffset = new Vector2(offsetX, offsetY);
+    }
 
     void AdjustShader(RaycastHit hit)
     {
@@ -103,7 +124,6 @@ public class TargetMove : MonoBehaviour {
         {
             hit.transform.gameObject.layer = 0;
             var t = hit.transform.gameObject.GetComponentsInChildren<Transform>()[1];
-            Debug.Log("Destroying: " + t.name);
             Destroy(t.gameObject);
         } 
     }
@@ -111,7 +131,6 @@ public class TargetMove : MonoBehaviour {
     void MoveAndResizeToPoint(RaycastHit hit)
     {
         var r = hit.transform.gameObject.GetComponent<Renderer>();
-        Debug.Log(hit.transform.name);
         transform.position = r.bounds.center;
         transform.localScale = r.bounds.size;
 
@@ -121,7 +140,6 @@ public class TargetMove : MonoBehaviour {
     void MoveToPoint(RaycastHit hit)
     {
         newPosition = hit.point;
-        Debug.Log(hit.transform.gameObject);
         transform.position = newPosition;
     }
 

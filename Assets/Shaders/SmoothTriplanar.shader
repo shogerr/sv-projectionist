@@ -29,12 +29,15 @@
 
         void surf(Input IN, inout SurfaceOutput o) {
             float3 projNormal = saturate(pow(IN.worldNormal * 1.4, 4));
+            //float3 projNormal = IN.worldNormal;
 
             float2 offset = IN.worldPos.zy * _MainTex_ST.xy + _MainTex_ST.zw;
+
             // SIDE X
             float3 x = tex2D(_MainTex, offset) * abs(IN.worldNormal.x);
+
             // TOP / BOTTOM
-            float3 y = tex2D(_MainTex, IN.worldPos.xz * _MainTex_ST.xy + _MainTex_ST.zw) * abs(IN.worldNormal.y);
+            float3 y = tex2D(_MainTex, IN.worldPos.zx * _MainTex_ST.xy + _MainTex_ST.zw) * abs(IN.worldNormal.y);
             
             // SIDE Z	
             float3 z = tex2D(_MainTex, IN.worldPos.xy * _MainTex_ST.xy + _MainTex_ST.zw) * abs(IN.worldNormal.z);
